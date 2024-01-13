@@ -28,4 +28,20 @@ paths:
       summary: Show the status of server.
       tags:
       - root
+  /api/product:
+    post:
+      consumes:
+      - '*/*'
+      description: Create a new product.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new product.
+      tags:
+      - productcreate
 swagger: "2.0"

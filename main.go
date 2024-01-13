@@ -70,7 +70,7 @@ func main() {
 	// Provide a minimal config
 	app.Use(basicauth.New(basicauth.Config{
 		Users: map[string]string{
-			"user":  "pass",
+			"user": "pass",
 		},
 	}))
 
@@ -119,7 +119,14 @@ func HealthCheck(c *fiber.Ctx) error {
 	return nil
 }
 
-// Create a new product Route
+// PostProduct godoc
+// @Summary Create a new product.
+// @Description Create a new product.
+// @Tags productcreate
+// @Accept */*
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/product [post]
 func PostProduct(c *fiber.Ctx) error {
 
 	// TODO: this should go as a global variable

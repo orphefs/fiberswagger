@@ -46,6 +46,30 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/product": {
+            "post": {
+                "description": "Create a new product.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "productcreate"
+                ],
+                "summary": "Create a new product.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
         }
     }
 }`
