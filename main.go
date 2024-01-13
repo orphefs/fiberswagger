@@ -8,6 +8,7 @@ import (
 	// replace with your own docs folder, usually "github.com/username/reponame/docs"
 	_ "github.com/orphefs/testserver/docs"
 	"github.com/orphefs/testserver/models"
+	
 	"gopkg.in/go-playground/validator.v9"
 )
 
@@ -55,6 +56,8 @@ type ValidateShopping struct {
 // @BasePath /
 func main() {
 
+	defer models.CloseDatabase()
+	
 	// Custom config
 	app := fiber.New(fiber.Config{
 		Prefork:       true,
@@ -65,7 +68,7 @@ func main() {
 
 	models.SetUpDatabase()
 
-	// app.Get("/", HealthCheck)
+	app.Get("/", HealthCheck)
 
 	app.Post("/api/product", PostProduct)
 
@@ -88,25 +91,25 @@ func main() {
 	app.Listen(":8080")
 }
 
-// // HealthCheck godoc
-// // @Summary Show the status of server.
-// // @Description get the status of server.
-// // @Tags root
-// // @Accept */*
-// // @Produce json
-// // @Success 200 {object} map[string]interface{}
-// // @Router / [get]
-// func HealthCheck(c *fiber.Ctx) error {
-// 	res := map[string]interface{}{
-// 		"data": "Server is up and running",
-// 	}
+// HealthCheck godoc
+// @Summary Show the status of server.
+// @Description get the status of server.
+// @Tags root
+// @Accept */*
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router / [get]
+func HealthCheck(c *fiber.Ctx) error {
+	res := map[string]interface{}{
+		"data": "Server is up and running",
+	}
 
-// 	if err := c.JSON(res); err != nil {
-// 		return err
-// 	}
+	if err := c.JSON(res); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	return nil
+}
 
 // Create a new product Route
 func PostProduct(c *fiber.Ctx) error {

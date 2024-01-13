@@ -5,6 +5,9 @@ import (
 	"gorm.io/gorm"
 )
 
+var Database *gorm.DB = nil
+var DATABASE_URI string = "testserver.db"
+
 // Product represents a product in the shopping list.
 // [Name] is the name of the product.
 // [Description] is the description of the product.
@@ -32,18 +35,13 @@ type ShoppingList struct {
 func SetUpDatabase() {
 	// Connect to sqlite database
 	// you can use any database driver you wish
-	db, err := gorm.Open(sqlite.Open("testserver.db"), &gorm.Config{})
+	db := getDatabase()
 
 	// Connect to Postgres database
 	// db, err := gorm.Open(postgres.Open("host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"), &gorm.Config{})
 
 	// Connect to MySQL database
 	// db, err := gorm.Open(mysql.Open("gorm:gorm@tcp(localhost:9920)/gorm?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{})
-
-	// Check if there is an error when connecting to database
-	if err != nil {
-		panic("failed to connect database")
-	}
 
 	// Auto migrate models schema to database
 	db.AutoMigrate(&Product{}, &ShoppingList{})
@@ -52,13 +50,33 @@ func SetUpDatabase() {
 // getDatabase returns a database connection.
 func getDatabase() *gorm.DB {
 	// Connect to sqlite database
-	db, err := gorm.Open(sqlite.Open("testserver.db"), &gorm.Config{})
+	if Database != nil {
+		return Database
+	}
+
+	db, err := gorm.Open(sqlite.Open(DATABASE_URI), &gorm.Config{})
 	// Check if there is an error when connecting to database
+
 	if err != nil {
 		panic("failed to connect database")
 	}
 	// return database
+	Database = db
 	return db
+}
+
+// closeDatabase.
+func CloseDatabase() {
+	// Connect to sqlite database
+	if Database != nil {
+		sqlDB, err := Database.DB()
+		sqlDB.Close()
+		if err != nil {
+			panic("failed to close database")
+		}
+		Database = nil
+	}
+
 }
 
 // GetProduct returns a product with the given ID.
